@@ -1,4 +1,3 @@
-__all__ = (
-    "config"
-)
+__all__ = "config"
+
 from .config import config
