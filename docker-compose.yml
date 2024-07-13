@@ -1,0 +1,22 @@
+services:
+
+  postgres:
+    image: postgres
+    container_name: pg_poker_club
+    env_file: ./cashier_app/.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27018:27017'
+    volumes:
+      - dbdata6:/data/db
+
+volumes:
+  dbdata6:
+  pgdata:
