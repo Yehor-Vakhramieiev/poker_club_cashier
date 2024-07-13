@@ -42,7 +42,7 @@ class PostgresDatabaseHelper:
 
 
 db_helper = PostgresDatabaseHelper(
-    url=str(config.db.url),
+    url=config.db.url,
     echo=config.db.echo,
     echo_pool=config.db.echo_pool,
     pool_size=config.db.pool_size,
