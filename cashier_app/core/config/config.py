@@ -1,5 +1,9 @@
+from pathlib import Path
+
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+BASE_DIR = Path(__file__).parent.parent.parent
 
 
 class PostgresConfig(BaseModel):
@@ -45,21 +49,24 @@ class MongoDBConfig(BaseModel):
         return "{}://{}:{}".format(self.driver, self.host, self.port)
 
 
-class DatabaseCongig(BaseModel):
+class DatabaseConfig(BaseModel):
     postgres: PostgresConfig
     mongo: MongoDBConfig
 
 
 class Config(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file="../../.env",
+        env_file=f"{BASE_DIR}/.env",
         env_prefix="APP_",
         case_sensitive=False,
         env_nested_delimiter="__",
         extra="ignore",
     )
 
-    db: DatabaseCongig
+    db: DatabaseConfig
 
 
 config = Config()
+
+if __name__ == "__main__":
+    print(BASE_DIR)
