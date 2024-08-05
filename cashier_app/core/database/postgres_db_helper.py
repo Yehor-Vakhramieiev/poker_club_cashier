@@ -42,9 +42,9 @@ class PostgresDatabaseHelper:
 
 
 db_helper = PostgresDatabaseHelper(
-    url=config.db.url,
-    echo=config.db.echo,
-    echo_pool=config.db.echo_pool,
-    pool_size=config.db.pool_size,
-    max_overflow=config.db.max_overflow,
+    url=config.db.postgres.uri,
+    echo=config.db.postgres.echo,
+    echo_pool=config.db.postgres.echo_pool,
+    pool_size=config.db.postgres.pool_size,
+    max_overflow=config.db.postgres.max_overflow,
 )

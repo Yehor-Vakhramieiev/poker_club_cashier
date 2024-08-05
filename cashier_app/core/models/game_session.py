@@ -1,7 +1,8 @@
-from datetime import datetime
+import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy import DateTime
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from core.models import Base
 
@@ -12,8 +13,8 @@ if TYPE_CHECKING:
 class GameSession(Base):
     __tablename__ = "game_sessions"
 
-    started_at: Mapped[datetime]
-    finished_at: Mapped[datetime | None]
+    started_at: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime.datetime | None] = mapped_column(DateTime(timezone=True))
     rake: Mapped[int | None]
 
     table_sessions: Mapped[list["TableSession"]] = relationship(

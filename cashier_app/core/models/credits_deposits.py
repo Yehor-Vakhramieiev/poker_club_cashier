@@ -1,8 +1,8 @@
-from datetime import datetime
+import datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Integer, ForeignKey
+from sqlalchemy import Integer, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
@@ -24,7 +24,7 @@ class CreditDeposit(Base):
         ForeignKey("players.id"),
         nullable=False,
     )
-    given_at: Mapped[datetime]
+    given_at: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True))
     operation_type: Mapped[OperationType]
     amount: Mapped[int]
 

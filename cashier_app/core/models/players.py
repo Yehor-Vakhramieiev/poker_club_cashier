@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import String
@@ -17,7 +17,7 @@ class Player(Base):
     first_name: Mapped[str]
     second_name: Mapped[str]
     nickname: Mapped[str | None]
-    birth_date: Mapped[datetime | None]
+    birth_date: Mapped[datetime.date | None]
     phone_number: Mapped[str | None]
     club_card_number: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     current_credit_deposit: Mapped[int | None]
