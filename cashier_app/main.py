@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import ORJSONResponse
 
 from api import router as api_router
@@ -22,6 +22,12 @@ app = FastAPI(
 )
 
 app.include_router(api_router)
+
+
+@app.exception_handler(ZeroDivisionError)
+async def zero_div(request, ex: ZeroDivisionError):
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True, host="localhost", port=8000)

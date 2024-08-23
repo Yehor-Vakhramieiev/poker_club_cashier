@@ -1,18 +1,14 @@
-from enum import Enum
+import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
+from core.structures import OperationType
 
 if TYPE_CHECKING:
     from .player_session import PlayerSession
-
-
-class OperationType(Enum):
-    cash_in = "cash_in"
-    cash_out = "cash_out"
 
 
 class CashInOut(Base):
@@ -24,7 +20,8 @@ class CashInOut(Base):
     )
     type: Mapped[OperationType]
     amount: Mapped[int]
-    description: Mapped[str]
+    time: Mapped[datetime.time]
+    description: Mapped[str | None]
 
     player_session: Mapped["PlayerSession"] = relationship(
         "PlayerSession",
