@@ -1,2 +1,1 @@
-__all__ = ("PlayerController",)
-from .player_controller import PlayerController
+from .controller import Controller

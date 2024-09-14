@@ -1,33 +1,29 @@
-from typing import TYPE_CHECKING, overload
+from typing import TYPE_CHECKING
 
 from sqlalchemy import select, update
 
-from core.models import Base
-from .meta import RepoMeta
-
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
+    from core.models import Base
 
 
-class BaseRepository[M: Base](metaclass=RepoMeta):
-    __model__: type[M]
+class BaseRepository:
+    __model__: type["Base"]
 
     def __init__(self, session: "AsyncSession"):
         self.session: "AsyncSession" = session
 
-    @overload
     async def _get(
-        self,
-        /,
-        limit: int | None = None,
-        offset: int | None = None,
-        **filters,
-    ) -> list[M]:
+        self, /, options=None, use_list=True, limit=None, offset=None, **filters
+    ):
+
         _filters = [
             getattr(self.__model__, field) == value for field, value in filters.items()
         ]
+
         stmt = (
             select(self.__model__)
+            .options(*options)
             .where(*_filters)
             .limit(limit)
             .offset(offset)
@@ -35,20 +31,19 @@ class BaseRepository[M: Base](metaclass=RepoMeta):
         )
 
         result = await self.session.scalars(stmt)
-        return result.all()  # type: ignore
 
-    async def _get(self, *_, **__) -> list[M]:
-        stmt = select(self.__model__).order_by(self.__model__.id)
-        result = await self.session.scalars(stmt)
-        return result.all()  # type: ignore
+        if options:
+            result = result.unique()
 
-    async def add(self, instance: M) -> M:
+        return result.all() if use_list else result.first()
+
+    async def _add(self, **values):
+        instance = self.__model__(**values)
         self.session.add(instance)
         await self.session.commit()
         await self.session.refresh(instance)
         return instance
 
-    # TODO: add type annotation to values with Unpack[] when it will be supported
     async def _update(self, pk, **values):
         stmt = update(self.__model__).where(self.__model__.id == pk).values(**values)  # type: ignore
         await self.session.execute(stmt)

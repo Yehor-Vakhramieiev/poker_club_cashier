@@ -8,15 +8,18 @@ from api.schemas import (
     AddPlayerSessionSchema,
     UpdatePlayerSessionSchema,
 )
+from .cash_in_out import router as cash_in_out_router
 
 if TYPE_CHECKING:
     from api.services import PlayerService
 
-router = APIRouter(prefix="/sessions")
+
+router = APIRouter(prefix="/session", tags=["Session"])
+router.include_router(cash_in_out_router)
 
 
 @router.get("", response_model=list[PlayerSessionSchema | None])
-async def get_sessions(
+async def get_session(
     player_service: Annotated["PlayerService", Depends(get_player_service)]
 ):
     return await player_service.get_active_sessions()
@@ -37,3 +40,7 @@ async def update_session(
     player_service: Annotated["PlayerService", Depends(get_player_service)],
 ):
     return await player_service.update_session(session_id, update_values)
+
+
+@router.get("/{id}")
+async def get_session_detail(id: int): ...

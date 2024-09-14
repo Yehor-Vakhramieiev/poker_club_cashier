@@ -2,7 +2,6 @@ from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, status
-from fastapi.responses import ORJSONResponse
 
 from api import router as api_router
 from core.database import pg_db_helper
@@ -17,7 +16,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
 

@@ -12,6 +12,7 @@ from api.schemas import (
 if TYPE_CHECKING:
     from api.services import PlayerService
 
+
 router = APIRouter(prefix="/operation")
 
 

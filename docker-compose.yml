@@ -1,22 +1,40 @@
 services:
-
   postgres:
+    container_name: postgres
     image: postgres
-    container_name: pg_poker_club
-    env_file: ./cashier_app/.env
-    ports:
-      - "5433:5432"
+    environment:
+      POSTGRES_USER: ${APP_DB__POSTGRES__USER:?}
+      POSTGRES_PASSWORD: ${APP_DB__POSTGRES__PASSWORD:?}
+      PGDATA: /data/postgres
     volumes:
-      - pgdata:/var/lib/postgresql/data
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    restart: unless-stopped
 
-  mongodb:
-    image: mongo
-    container_name: mongodb
+  main-app:
+    build:
+      context: .
+      dockerfile: cashier_app/.DockerFile
+    container_name: main-app
     ports:
-      - '27018:27017'
+      - "${API_PORT}:8000"
+    env_file:
+      - .env
     volumes:
-      - dbdata6:/data/db
+      - ./cashier_app:/cashier_app
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    command: "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
+
+
+networks:
+  backend:
+    driver: bridge
 
 volumes:
-  dbdata6:
-  pgdata:
+    postgres:

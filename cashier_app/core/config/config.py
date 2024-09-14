@@ -56,7 +56,7 @@ class DatabaseConfig(BaseModel):
 
 class Config(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=f"{BASE_DIR}/.env",
+        # env_file=f"{BASE_DIR}/.env",
         env_prefix="APP_",
         case_sensitive=False,
         env_nested_delimiter="__",
@@ -67,6 +67,3 @@ class Config(BaseSettings):
 
 
 config = Config()
-
-if __name__ == "__main__":
-    print(BASE_DIR)

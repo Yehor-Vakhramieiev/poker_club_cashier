@@ -1,19 +1,14 @@
 import datetime
-from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Integer, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
+from core.structures import CreditDepositType
 
 if TYPE_CHECKING:
     from core.models import Player
-
-
-class OperationType(Enum):
-    credit = "credit"
-    deposit = "deposit"
 
 
 class CreditDeposit(Base):
@@ -25,7 +20,7 @@ class CreditDeposit(Base):
         nullable=False,
     )
     given_at: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True))
-    operation_type: Mapped[OperationType]
+    operation_type: Mapped[CreditDepositType]
     amount: Mapped[int]
 
     player: Mapped["Player"] = relationship(
