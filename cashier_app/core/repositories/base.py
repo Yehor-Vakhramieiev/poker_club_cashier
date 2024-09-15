@@ -2,12 +2,14 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import select, update
 
+from .meta import RepoMeta
+
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
     from core.models import Base
 
 
-class BaseRepository:
+class BaseRepository(metaclass=RepoMeta):
     __model__: type["Base"]
 
     def __init__(self, session: "AsyncSession"):

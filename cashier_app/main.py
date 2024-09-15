@@ -4,7 +4,7 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, status
 
 from api import router as api_router
-from core.database import pg_db_helper
+from core import pg_db_helper
 
 
 @asynccontextmanager

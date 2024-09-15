@@ -3,6 +3,10 @@ LOGS = docker logs
 ENV = --env-file .env
 APP_CONTAINER = main-app
 STORAGES_CONTAINER = postgres
+AL = alembic
+ALEMBIC_DIR = ./cashier_app
+MAKE_MIGRATION = revision --autogenerate
+MIGRATE = upgrade head
 
 .PHONY: app
 app:
@@ -30,9 +34,19 @@ all-down:
 	${DC} down
 
 .PHONY: app-logs
-app-logs: app
+app-logs:
 	${LOGS} ${APP_CONTAINER} -f
 
 .PHONY: shell
-shell: app
+shell:
 	${DC} exec -it ${APP_CONTAINER} bash
+
+
+.PHONY: make_migrations
+make_migrations:
+	cd ${ALEMBIC_DIR} && ${AL} ${MAKE_MIGRATION} && cd ..
+
+
+.PHONY: migrate
+migrate:
+	cd ${ALEMBIC_DIR} && ${AL} ${MIGRATE} && cd

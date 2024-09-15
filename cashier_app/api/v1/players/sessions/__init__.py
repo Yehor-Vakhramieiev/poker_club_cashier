@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from api.services import PlayerService
 
 
-router = APIRouter(prefix="/session", tags=["Session"])
+router = APIRouter(prefix="/session")
 router.include_router(cash_in_out_router)
 
 

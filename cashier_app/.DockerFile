@@ -19,3 +19,5 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-root --no-interaction --no-ansi
 
 COPY /cashier_app /cashier_app
+
+EXPOSE 8000

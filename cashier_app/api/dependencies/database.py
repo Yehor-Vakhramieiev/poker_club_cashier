@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Annotated, AsyncGenerator
 from fastapi import Depends
 
 from api.services import PlayerService
+from core import pg_db_helper
 from core.controllers import Controller
-from core.database import pg_db_helper
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession

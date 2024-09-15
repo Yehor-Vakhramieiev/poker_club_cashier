@@ -21,7 +21,6 @@ def decorator(func):
 
 class RepoMeta(type):
     def __new__(cls, name, bases, dct):
-        print("META")
         for key, value in dct.items():
             if inspect.iscoroutinefunction(value) and not key.startswith("_"):
                 dct[key] = decorator(value)
