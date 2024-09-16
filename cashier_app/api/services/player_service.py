@@ -10,6 +10,8 @@ if TYPE_CHECKING:
         AddPlayerSessionSchema,
         AddCashInOutSchema,
         UpdateCashInOutSchema,
+        AddCreditDepositSchema,
+        UpdateCreditDepositSchema,
     )
 
 
@@ -47,7 +49,10 @@ class PlayerService:
         return await self.controller.players.sessions.add(**session.model_dump())
 
     async def get_active_sessions(self):
-        return await self.controller.players.sessions.get_all_active()
+        return await self.controller.players.sessions.get()
+
+    async def get_session_detail(self, session_id: int):
+        return await self.controller.players.sessions.get(session_id=session_id)
 
     async def update_session(
         self, player_id: int, update_values: "UpdatePlayerSessionSchema"
@@ -69,5 +74,17 @@ class PlayerService:
     ):
 
         return await self.controller.players.operations(
+            operation_id, **update_values.model_dump(exclude_none=True)
+        )
+
+    async def add_credit_deposit_operation(self, operation: "AddCreditDepositSchema"):
+        return await self.controller.players.credit_deposits.add(
+            **operation.model_dump()
+        )
+
+    async def update_credit_deposit_operation(
+        self, operation_id: int, update_values: "UpdateCreditDepositSchema"
+    ):
+        return await self.controller.players.credit_deposits.update(
             operation_id, **update_values.model_dump(exclude_none=True)
         )
