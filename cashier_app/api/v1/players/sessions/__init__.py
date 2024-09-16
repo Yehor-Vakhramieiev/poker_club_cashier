@@ -7,6 +7,7 @@ from api.schemas import (
     PlayerSessionSchema,
     AddPlayerSessionSchema,
     UpdatePlayerSessionSchema,
+    PlayerSessionDetailSchema,
 )
 from .cash_in_out import router as cash_in_out_router
 
@@ -42,5 +43,9 @@ async def update_session(
     return await player_service.update_session(session_id, update_values)
 
 
-@router.get("/{id}")
-async def get_session_detail(id: int): ...
+@router.get("/{session_id}", response_model=PlayerSessionDetailSchema)
+async def get_session_detail(
+    session_id: int,
+    player_service: Annotated["PlayerService", Depends(get_player_service)],
+):
+    return await player_service.get_session_detail(session_id)

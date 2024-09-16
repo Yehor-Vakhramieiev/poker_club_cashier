@@ -29,7 +29,7 @@ __all__ = (
 class PlayerRepository(BaseRepository):
     __model__ = Player
 
-    async def add(self, **values: Unpack[AddUpdatePlayerValues]):
+    async def add(self, **values: Unpack[AddUpdatePlayerValues]) -> Player:
         return await self._add(**values)
 
     @overload
@@ -81,29 +81,29 @@ class PlayerRepository(BaseRepository):
 class PlayerSessionRepository(BaseRepository):
     __model__ = PlayerSession
 
-    async def add(self, **values: Unpack[AddPlayerSessionValues]) -> dict:
+    async def add(self, **values: Unpack[AddPlayerSessionValues]) -> PlayerSession:
         session = await self._add(**values)
-        player = await session.awaitable_attrs.player
-        return dict(
-            session.__dict__,
-            player_first_name=player.first_name,
-            player_second_name=player.second_name,
-            player_nickname=player.nickname,
-        )
+        session.player = await session.awaitable_attrs.player
+        return session
 
-    async def get_all_active(self) -> list[dict]:
-        options = (joinedload(PlayerSession.player),)
-        result = await self._get(options=options, finished_at=None)
+    @overload
+    async def get(self) -> list[PlayerSession]: ...
 
-        return [
-            dict(
-                sess.__dict__,
-                player_first_name=sess.player.first_name,
-                player_second_name=sess.player.second_name,
-                player_nickname=sess.player.nickname,
+    @overload
+    async def get(self, session_id: int) -> PlayerSession: ...
+
+    async def get(
+        self, session_id: int | None = None
+    ) -> list[PlayerSession] | PlayerSession:
+        if session_id:
+            _options = (
+                joinedload(PlayerSession.player),
+                joinedload(PlayerSession.cash_in_outs),
             )
-            for sess in result
-        ]
+            return await self._get(options=_options, use_list=False, id=session_id)
+
+        options = (joinedload(PlayerSession.player),)
+        return await self._get(options=options, finished_at=None)
 
     async def update(
         self, session_id: int, **values: Unpack[UpdatePlayerSessionValues]
@@ -136,5 +136,5 @@ class CreditDepositRepository(BaseRepository):
 
     async def update(
         self, operation_id: int, **values: Unpack[UpdateCreditDepositValues]
-    ):
+    ) -> None:
         return await self._update(operation_id, **values)

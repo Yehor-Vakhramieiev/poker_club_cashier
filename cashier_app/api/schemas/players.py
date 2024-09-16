@@ -13,6 +13,7 @@ __all__ = (
     "PlayerSessionSchema",
     "AddPlayerSessionSchema",
     "UpdatePlayerSessionSchema",
+    "PlayerSessionDetailSchema",
     "BaseCashInOutSchema",
     "CashInOutSchema",
     "AddCashInOutSchema",
@@ -50,6 +51,12 @@ class UpdatePlayerSchema(BaseSchema):
     club_card_number: str | None = None
 
 
+class PlayerShortSchema(BaseSchema):
+    first_name: str | None
+    second_name: str | None
+    nickname: str | None
+
+
 class PlayerDetailSchema(PlayerSchema):
     sessions: list["PlayerSessionDetailSchema"] | list[None]
     credits_deposits: list["CreditDepositSchema"] | list[None]
@@ -64,9 +71,10 @@ class BasePlayerSessionSchema(BaseSchema):
 
 class PlayerSessionSchema(BasePlayerSessionSchema):
     id: int
-    player_first_name: str | None = None
-    player_second_name: str | None = None
-    player_nickname: str | None = None
+    player: PlayerShortSchema
+    # player_first_name: str | None = None
+    # player_second_name: str | None = None
+    # player_nickname: str | None = None
 
 
 class PlayerSessionDetailSchema(PlayerSessionSchema):
